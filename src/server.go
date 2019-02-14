@@ -6,16 +6,15 @@ package main
 import (
 	"common"
 	"fmt"
-	"reflect"
+	"net/http"
+	"ws"
 )
 
 func main() {
-
-	var target = []string{"a", "b", "c", "d"}
-
-	fmt.Println(reflect.ValueOf(&target))
-	fmt.Println(reflect.ValueOf(target))
-	fmt.Println(reflect.TypeOf(target))
-	fmt.Println(reflect.TypeOf(target).Kind())
-	fmt.Printf(" \n%s", common.LOGO)
+	inChan := make(chan bool)
+	fmt.Printf(" \n%s\n", common.LOGO)
+	fmt.Printf("Exchange quotation server starting")
+	http.HandleFunc("/", ws.WsHandle)
+	go http.ListenAndServe("0.0.0.0:1234", nil)
+	fmt.Println(<-inChan)
 }
